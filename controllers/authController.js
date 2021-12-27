@@ -3,6 +3,7 @@ const PetOwner = require("../models/PetOwner");
 
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
+const axios = require("axios");
 
 module.exports.signIn = async (req, res, next) => {
   const { username, password } = req.body;
@@ -101,6 +102,13 @@ module.exports.signUp = async (req, res, next) => {
     return next(error);
   }
 
+  let location;
+  try {
+    location = await getLocationCoordinates(address);
+  } catch (err) {
+    next(err);
+  }
+
   const newUser = new PetOwner({
     username,
     password: hashedPassword,
@@ -109,17 +117,14 @@ module.exports.signUp = async (req, res, next) => {
     address,
     pets: [],
     phone,
-    location: {
-      lat: 0,
-      lng: 0
-    }
+    location
   });
 
   try {
     await newUser.save();
   } catch (err) {
     const error = new HttpError(
-      "111Signing up process failed, please try again later.",
+      "Signing up process failed, please try again later.",
       500
     );
     return next(error);
@@ -148,4 +153,20 @@ module.exports.signUp = async (req, res, next) => {
     username: newUser.username,
     token
   });
+};
+
+const getLocationCoordinates = async function (address) {
+  const apiURL = `https://maps.googleapis.com/maps/api/geocode/json?address=${address}&key=${process.env.GOOGLE_MAPS_GEOCODER_KEY}`;
+  const response = await axios.get(apiURL);
+  const data = response.data;
+
+  if (!data || data.status === "ZERO_RESULTS") {
+    const error = new HttpError(
+      "Could not find the exact location for the given address. Please ensure the address is correct and try again.",
+      422
+    );
+    throw error;
+  }
+
+  return data.results[0].geometry.location;
 };
