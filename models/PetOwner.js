@@ -1,9 +1,16 @@
 const { Schema, model } = require("mongoose");
+const uniqueValidator = require("mongoose-unique-validator");
 
-const PetOwnerSchema = Schema({
+const PetOwnerSchema = new Schema({
   username: {
     type: "String",
-    requried: true
+    requried: true,
+    unique: true
+  },
+  email: {
+    type: "String",
+    required: true,
+    unique: true
   },
   password: {
     type: "String",
@@ -19,15 +26,14 @@ const PetOwnerSchema = Schema({
     required: true
   },
   location: {
-    type: {
-      type: String,
-      enum: ["Point"]
+    lat: {
+      type: Number,
+      required: true
     },
-    coordinates: {
-      type: [Number],
-      index: "2dsphere"
-    },
-    formattedAddress: String
+    lng: {
+      type: Number,
+      required: true
+    }
   },
   pets: [
     {
@@ -51,6 +57,6 @@ const PetOwnerSchema = Schema({
   }
 });
 
-const PetOwner = model("pet_owner", PetOwnerSchema);
+PetOwnerSchema.plugin(uniqueValidator);
 
-module.exports = PetOwner;
+module.exports = model("pet_owner", PetOwnerSchema);
