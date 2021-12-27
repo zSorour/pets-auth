@@ -2,9 +2,7 @@ const mongoose = require("mongoose");
 
 module.exports.initiateDBConnection = async () => {
   mongoose
-    .connect(
-      "mongodb+srv://ahmad:test123@cluster0.vbktc.mongodb.net/users?retryWrites=true&w=majority"
-    )
+    .connect(process.env.mongoURI)
     .then(() => {
       console.log("Connected to DB.");
     })
