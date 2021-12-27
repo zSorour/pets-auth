@@ -51,7 +51,7 @@ module.exports.signIn = async (req, res, next) => {
   try {
     token = jwt.sign(
       { userId: user.id, username: user.username },
-      "supersecret_dont_share",
+      process.env.JWT_SECRET,
       { expiresIn: "1h" }
     );
   } catch (err) {
