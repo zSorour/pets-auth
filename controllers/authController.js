@@ -151,6 +151,27 @@ module.exports.signUp = async (req, res, next) => {
   });
 };
 
+module.exports.auth = (req, res, next) => {
+  try {
+    const token = req.headers.authorization.split(" ")[1];
+    if (!token) {
+      throw new HttpError("Authentication failed!", 403);
+    }
+
+    const tokenInfo = jwt.verify(token, process.env.JWT_SECRET);
+
+    //send authorized
+    res.send({
+      message: "Authorized",
+      username: tokenInfo.username,
+      userID: tokenInfo.userID
+    });
+  } catch (err) {
+    const error = new HttpError("Unauthorized.", 403);
+    return next(error);
+  }
+};
+
 const getLocationCoordinates = async function (address) {
   const apiURL = `https://maps.googleapis.com/maps/api/geocode/json?address=${address}&key=${process.env.GOOGLE_MAPS_GEOCODER_KEY}`;
   const response = await axios.get(apiURL);
