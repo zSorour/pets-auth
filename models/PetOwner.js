@@ -47,7 +47,8 @@ const PetOwnerSchema = new Schema({
       },
       breed: String,
       age: Number,
-      color: String
+      color: String,
+      photoURL: String
     }
   ],
   phone: {
