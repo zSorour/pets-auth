@@ -4,6 +4,7 @@ const PetOwner = require("../models/PetOwner");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const axios = require("axios");
+const { validationResult } = require("express-validator");
 
 module.exports.signIn = async (req, res, next) => {
   const { username, password } = req.body;
@@ -70,6 +71,16 @@ module.exports.signIn = async (req, res, next) => {
 };
 
 module.exports.signUp = async (req, res, next) => {
+  const { errors } = validationResult(req);
+
+  if (errors.length > 0) {
+    const errorMessages = errors.map((err) => err.msg);
+    return res.status(422).send({
+      message: "Signing up process failed, please try again later.",
+      errors: errorMessages
+    });
+  }
+
   const { username, password, email, name, address, phone } = req.body;
 
   let user;
