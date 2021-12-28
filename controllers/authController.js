@@ -51,13 +51,16 @@ module.exports.signIn = async (req, res, next) => {
   let token;
   try {
     token = jwt.sign(
-      { userId: user.id, username: user.username },
+      {
+        userID: user.id,
+        username: user.username
+      },
       process.env.JWT_SECRET,
       { expiresIn: "1h" }
     );
   } catch (err) {
     const error = new HttpError(
-      "Logging in failed, please try again later.",
+      "Login process failed, please try again later.",
       500
     );
     return next(error);
@@ -113,9 +116,9 @@ module.exports.signUp = async (req, res, next) => {
     return next(error);
   }
 
-  let location;
+  let addressInfo;
   try {
-    location = await getLocationCoordinates(address);
+    addressInfo = await getLocationCoordinates(address);
   } catch (err) {
     next(err);
   }
@@ -125,35 +128,17 @@ module.exports.signUp = async (req, res, next) => {
     password: hashedPassword,
     email,
     name,
-    address,
+    address: addressInfo.formattedAddress,
     pets: [],
     phone,
-    location
+    location: addressInfo.location
   });
 
   try {
     await newUser.save();
   } catch (err) {
     const error = new HttpError(
-      "Signing up process failed, please try again later.",
-      500
-    );
-    return next(error);
-  }
-
-  let token;
-  try {
-    token = jwt.sign(
-      {
-        userID: newUser.id,
-        username: newUser.username
-      },
-      process.env.JWT_SECRET,
-      { expiresIn: "1h" }
-    );
-  } catch (err) {
-    const error = new HttpError(
-      "Signing up process failed, please try again later.",
+      "11Signing up process failed, please try again later.",
       500
     );
     return next(error);
@@ -162,7 +147,7 @@ module.exports.signUp = async (req, res, next) => {
   res.status(201).send({
     userID: newUser.id,
     username: newUser.username,
-    token
+    message: "Account has been created successfully."
   });
 };
 
@@ -179,5 +164,8 @@ const getLocationCoordinates = async function (address) {
     throw error;
   }
 
-  return data.results[0].geometry.location;
+  return {
+    location: data.results[0].geometry.location,
+    formattedAddress: data.results[0].formatted_address
+  };
 };
