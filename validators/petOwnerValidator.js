@@ -11,7 +11,7 @@ module.exports.signUpValidator = () => [
   check("password")
     .matches(passwordRegEx)
     .withMessage(
-      "Password length must be between 8 and 50, containing at least 1 uppercase, 1 lowercase, 1 digit, and one special symbol, with no whitespaces"
+      "Password length must be between 8 and 50, containing at least 1 uppercase, 1 lowercase, 1 digit, and 1 special symbol, with no whitespaces"
     ),
-  check("phone").matches(phoneRegEx)
+  check("phone").matches(phoneRegEx).withMessage("Phone number is invalid")
 ];
