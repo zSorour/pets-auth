@@ -1,0 +1,11 @@
+POST http://localhost:4000/auth/signup HTTP/1.1
+content-type: application/json
+
+{
+    "username": "zSorour",
+    "password": "Haha@123",
+    "name": "Ahmad Sorour",
+    "email": "haha@outlook.com",
+    "address": "10 Farouk Amer, Cairo, Egypt",
+    "phone": "01024661195"
+}
