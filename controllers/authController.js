@@ -88,7 +88,9 @@ module.exports.signUp = async (req, res, next) => {
 
   let user;
   try {
-    user = await PetOwner.findOne({ username: username });
+    user = await PetOwner.findOne({
+      $or: [{ username: username }, { email: email }]
+    });
   } catch (err) {
     const error = new HttpError(
       "Signing up process failed, please try again later.",
@@ -99,7 +101,7 @@ module.exports.signUp = async (req, res, next) => {
 
   if (user) {
     const error = new HttpError(
-      "User exists already, please login instead.",
+      "User exists already, please login instead. Alternatively, you can sign up using different username or email.",
       422
     );
     return next(error);
@@ -138,7 +140,7 @@ module.exports.signUp = async (req, res, next) => {
     await newUser.save();
   } catch (err) {
     const error = new HttpError(
-      "11Signing up process failed, please try again later.",
+      "Signing up process failed, please try again later.",
       500
     );
     return next(error);
