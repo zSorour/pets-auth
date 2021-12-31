@@ -132,6 +132,7 @@ module.exports.signUp = async (req, res, next) => {
     name,
     address: addressInfo.formattedAddress,
     pets: [],
+    posts: [],
     phone,
     location: addressInfo.location
   });

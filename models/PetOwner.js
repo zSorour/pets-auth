@@ -51,6 +51,19 @@ const PetOwnerSchema = new Schema({
       photoURL: String
     }
   ],
+  posts: [
+    {
+      body: {
+        type: String,
+        required: true
+      },
+      imageURL: String,
+      publishDate: {
+        type: Date,
+        required: true
+      }
+    }
+  ],
   phone: {
     type: String,
     minLength: 11,
