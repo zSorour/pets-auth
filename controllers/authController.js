@@ -52,7 +52,7 @@ module.exports.signIn = async (req, res, next) => {
   try {
     token = jwt.sign(
       {
-        userID: user.id,
+        userID: user._id,
         username: user.username
       },
       process.env.JWT_SECRET,
