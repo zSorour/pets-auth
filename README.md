@@ -1,6 +1,6 @@
-#Authentication Service API for Pet Compass Cloud Computing Project
+# Authentication Service API for Pet Compass Cloud Computing Project
 
-##To run:
+## To run:
 
 ### Install required dependencies using
 `npm install`
