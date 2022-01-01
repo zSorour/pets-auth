@@ -2,6 +2,6 @@ POST http://localhost:4000/auth/signin HTTP/1.1
 content-type: application/json
 
 {
-    "username": "zSorour",
+    "username": "zSorour77",
     "password": "Haha@123"
 }
