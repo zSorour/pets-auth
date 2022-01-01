@@ -148,7 +148,6 @@ module.exports.signUp = async (req, res, next) => {
   }
 
   res.status(201).send({
-    userID: newUser.id,
     username: newUser.username,
     message: "Account has been created successfully."
   });
